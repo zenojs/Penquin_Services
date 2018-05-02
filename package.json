@@ -1,0 +1,21 @@
+{
+  "name": "penquinservice",
+  "version": "1.0.0",
+  "description": "Penquin is a matrimonial service, helps to provide poor people to find their better half at free of cost online.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Penquin"
+  ],
+  "author": "zenojs",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.2.1",
+    "mongoose": "^5.0.15",
+    "morgan": "^1.9.0"
+  }
+}
