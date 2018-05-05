@@ -12,3 +12,4 @@ var PartnerSchema = mongoose.Schema(
     });
 
 module.exports = mongoose.model('Partner', PartnerSchema);
+

@@ -2,8 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 
-var User = require('./app/models/user.model'); // get our mongoose model
-
 // create express app
 var app = express();
 
@@ -66,7 +64,9 @@ app.get('/', function (req, res) {
     res.json({ "message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes." });
 });
 
+require('./app/routes/user.routes.js')(app);
 require('./app/routes/partner.routes.js')(app);
+
 
 // listen for requests
 app.listen(port, function () {
