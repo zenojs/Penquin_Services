@@ -1,18 +1,45 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
+var jwt = require('jsonwebtoken');
+const express = require('express');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 // create express app
 var app = express();
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 // use morgan to log requests to the console
 app.use(morgan('dev'));
+
+app.use((req, res, next) => {
+    console.log(req.url);
+    if (req.url.indexOf('login') >= 0 && (!req.session || !req.session.authenticated)) {
+        //if(req.body.url
+        var token = (req.headers && req.headers.authorization) || (req.body.token || req.query.token || req.headers['x-access-token']);
+        if (token) {
+            console.log("verfiying token");
+            //Decode the token
+            jwt.verify(token, dbConfig.secret, (err, decod) => {
+                if (err) {
+                    res.status(403).json({ message: "Wrong Token" });
+                }
+                else {
+                    //If decoded then call next() so that respective route is called.
+                    req.decoded = decod;
+                    next();
+                }
+            });
+        }
+        else {
+            res.status(403).json({ message: "No Token" });
+        }
+    }
+    next();
+});
 
 app.use(function (req, res, next) {
     var oneof = false;

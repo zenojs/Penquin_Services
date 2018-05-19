@@ -1,11 +1,11 @@
-var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var User = require('../models/user.model.js');
-var dbConfig = require('../../config/database.config');
+const User = require('../models/user.model.js');
+const dbConfig = require('../../config/database.config');
+var jwt = require('jsonwebtoken');
 
 exports.authenticate = function (req, res) {
-    User.findOne({ email: req.body.email }, function (err, user) {
+    let userData = req.body;
+    User.findOne({ email: userData.email }, function (err, user) {
         if (err) throw err;
-
         if (!user) {
             res.json({ success: false, message: 'Authentication failed. User not found.' });
         } else if (user) {
@@ -17,20 +17,16 @@ exports.authenticate = function (req, res) {
                 // if user is found and password is right
                 // create a token with only our given payload
                 // we don't want to pass in the entire user since that has the password
-                const payload = {
-                    admin: user.admin
-                };
+                const payload = { admin: user._id };
                 var token = jwt.sign(payload, dbConfig.secret, { expiresIn: '1h' });
 
                 // return the information including token as JSON
-                res.json({
-                    success: true,
-                    message: 'Enjoy your token!',
-                    token: token
-                });
+                res.status(200).send({ token });
+                //res.json({ success: true, message: 'Enjoy your token!', token: token });
             }
         }
     })
+    console.log(6);
 }
 
 exports.register = function (req, res) {
@@ -56,7 +52,21 @@ exports.register = function (req, res) {
             console.log(err);
             return res.status(500).send({ message: "Some error occurred while creating the partner." });
         } else {
-            return res.send(data);
+            let payload = { admin: data._id }
+            let token = jwt.sign(payload, dbConfig.secret);
+            return res.status(200).send({ token });
+        }
+    });
+};
+
+exports.getusers = function (req, res) {
+    //console.log('Token Verified');
+    // Retrieve and return all partners from the database.
+    User.find(function (err, users) {
+        if (err) {
+            return res.status(500).send({ message: "Some error occurred while retrieving partners." });
+        } else {
+            return res.send(users);
         }
     });
 };

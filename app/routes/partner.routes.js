@@ -3,7 +3,7 @@ module.exports = function (app) {
     var partner = require('../controllers/partner.controller.js');
 
     // Create a new partner
-    app.post('/partner', partner.create);
+    app.post('/partner',  partner.create);
 
     // Retrieve by partnerID
     app.get('/partner/:partnerID', partner.findOne);

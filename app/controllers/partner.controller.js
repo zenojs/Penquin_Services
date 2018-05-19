@@ -1,6 +1,6 @@
-var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var Partner = require('../models/partner.model.js');
 var dbConfig = require('../../config/database.config');
+var jwt = require('jsonwebtoken');
 
 exports.create = function (req, res) {
     
